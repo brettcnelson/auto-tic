@@ -3,7 +3,7 @@ import './Square.css';
 
 function Square(props) {
 	return (
-		<div className='Square' onClick={props.click} >{props.val}</div>
+		<div className='Square' style={props.color && {background:props.color}} onClick={props.click} >{props.val}</div>
 	)
 }
 

@@ -3,12 +3,13 @@
 }
 
 .info {
-	width:50%;
+	width:48%;
 	display:inline-block;
 }
 
 .letter {
 	text-align:right;
+	padding:10px;
 }
 
 .ratio {

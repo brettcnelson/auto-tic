@@ -7,31 +7,36 @@ class Train extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      games: data.games,
+      node: data.games[0].moves[0],
       game: 0,
       move: 0,
-      symm: 0
+      symm: 2
     };
   }
 
   compMove() {
-    var move = this.state.node.children.reduce(pick);
-    this.setState({player:true,node:move});
-    function pick(a,b) {
-      return stats(b) > stats(a) ? b : a;
-      function stats(n) {
-        return (n.stats.wins-n.stats.losses)/n.total;
-      }
-    }
+  	var node;
+  	if (this.state.node.children.length) {
+  		var move = this.state.move+1;
+  		node = data.games[this.state.game].moves[move];
+  		this.setState({move:move,node:node});
+  	}
+  	else if (data.games[this.state.game+1]) {
+  		var game = this.state.game+1;
+  		node = data.games[game].moves[0];
+  		this.setState({game:game,move:0,node:node});
+  	}
   }
 
   render() {
-  	var node = this.state.games[this.state.game].moves[this.state.move]
+  	setTimeout(()=>this.compMove(),200);
+  	var game = data.games[this.state.game];
     return (
       <div className="Train">
       	<div><button onClick={this.props.click} >play against the computer</button></div>
-      	<Display node={node} />
-      	<Board node={node} symm={this.state.symm} />
+      	<div>Game: {this.state.game+1} of {data.games.length} - LeafID: {game.leafID} - Res: {game.res} - Moves: {game.moves.length-1}</div>
+      	<Display node={this.state.node} />
+      	<Board node={this.state.node} symm={this.state.symm} />
       </div>
     );
   }
