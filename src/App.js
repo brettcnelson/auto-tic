@@ -1,17 +1,26 @@
 import React, { Component } from 'react';
 import './App.css';
-import data from './data'
+import data from './data';
+import Board from './Board';
+import Buttons from './Buttons';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      play: true,
+      node: data.tree.children[0].children[2].children[0],
+      symm: 0
+    };
+  }
   render() {
     return (
       <div className="App">
-        {data.games.map(g=>g.moves.map((m,j)=><div key={j} >{JSON.stringify(m.boards[0],null,2)}</div>))}
+        <Buttons play={this.state.play} />
+        <Board node={this.state.node} symm={this.state.symm} />
       </div>
     );
   }
 }
 
 export default App;
-
-// (({ a, c }) => ({ a, c }))(object);
