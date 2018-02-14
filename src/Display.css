@@ -1,0 +1,16 @@
+.Display {
+
+}
+
+.info {
+	width:50%;
+	display:inline-block;
+}
+
+.letter {
+	text-align:right;
+}
+
+.ratio {
+	text-align:left;
+}
