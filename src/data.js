@@ -8,6 +8,7 @@ function Node(p,board) {
   this.parent = p || null;
   this.boards = symms.map(symm=>symm.reduce(makeSymm.bind(this),{}));
   this.letter = !p || p.letter === 'X' ? 'O' : 'X';
+  this.pos = i || null;
   this.stats = {wins:0,losses:0,ties:0,total:0};
   this.children = [];
   function makeSymm(a,b,i) {
@@ -58,7 +59,7 @@ Node.prototype.makeTree = function() {
       if (!this.boards[0][i]) {
         var testBoard = Object.assign({},this.boards[0]);
         testBoard[i] = this.letter === 'X' ? 'O' : 'X';
-        this.symmCheck(testBoard) && this.children.push(new Node(this,testBoard));
+        this.symmCheck(testBoard) && this.children.push(new Node(this,testBoard,i));
       }
     }
     this.children.forEach(c=>c.makeTree());
@@ -97,7 +98,6 @@ for (var i = 0 ; i < 16889 ; i++) {
 }
 
 var data = {
-  symms: symms,
   tree: tree,
   games: games.slice(-10)
 }
