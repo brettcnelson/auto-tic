@@ -4,7 +4,13 @@ import Square from './Square'
 
 function Board(props) {
 	function makeSquare(s,i) {
-		return <Square key={i} s={s} val={props.node.boards[props.symm][s]} />
+		return props.play ? 
+			<Square key={i} s={s} val={props.node.boards[props.symm][s]} click={squareClick} /> : 
+			<Square key={i} s={s} val={props.node.boards[props.symm][s]} />
+	}
+
+	function squareClick(p) {
+		props.squareClick(p);
 	}
 
 	return (
