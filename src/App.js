@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
+import Play from './Play';
+import Train from './Train';
 
 class App extends Component {
   constructor(props) {
@@ -9,10 +11,15 @@ class App extends Component {
     };
   }
 
+  switchPlay() {
+    var play = this.state.play;
+    this.setState({play:!play});
+  }
+
   render() {
     var game = this.state.play ? 
-      <Play /> :
-      <Train />;
+      <Play click={()=>this.switchPlay()} /> :
+      <Train click={()=>this.switchPlay()} />;
     return (
       <div className="App">{game}</div>
     );

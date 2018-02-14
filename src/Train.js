@@ -9,7 +9,8 @@ class Train extends Component {
     this.state = {
       games: data.games,
       game: 0,
-      move: 0
+      move: 0,
+      symm: 0
     };
   }
 
@@ -25,9 +26,12 @@ class Train extends Component {
   }
 
   render() {
+  	var node = this.state.games[this.state.game].moves[this.state.move]
     return (
       <div className="Train">
-
+      	<div><button onClick={this.props.click} >play against the computer</button></div>
+      	<Display node={node} />
+      	<Board node={node} symm={this.state.symm} />
       </div>
     );
   }

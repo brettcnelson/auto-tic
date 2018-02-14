@@ -26,7 +26,9 @@ class Play extends Component {
   render() {
     return (
       <div className="Play">
-
+      	<div><button onClick={this.props.click} >play against the computer</button></div>
+      	<Display node={this.props.node} />
+      	<Board node={this.props.node} />
       </div>
     );
   }
