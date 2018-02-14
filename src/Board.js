@@ -1,6 +1,6 @@
 import React from 'react';
 import './Board.css';
-import Square from './Square'
+import Square from './Square';
 
 function Board(props) {
 	var squares = [[1,2,3],[4,5,6],[7,8,9]];
