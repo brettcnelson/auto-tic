@@ -24,18 +24,8 @@ class Play extends Component {
     this.setState({node:data.tree,symm:0,player:player});
   }
 
-  squareClick(p) {
-    console.log(p);
-    // var symm = this.state.symm;
-    // var move = next(this.state.node);
-    // while (!move.length) {
-    //   symm++;
-    //   move = next(this.state.node);
-    // }
-    // this.setState({node:move[0],player:false,symm:symm});
-    // function next(n) {
-    //   return n.children.filter(c=>c.pos===p);
-    // }
+  squareClick(n,s) {
+    this.setState({node:n,player:false,symm:s});
   }
 
   compMove() {
@@ -55,7 +45,7 @@ class Play extends Component {
       <div className="Play">
       	<div><button onClick={this.props.click} >watch comp train</button><button onClick={()=>this.changePlayer()} >{this.state.first ? 'let the comp go first' : 'you go first'}</button><button onClick={()=>this.playAgain()}>play again</button></div>
       	<Display stats={this.state.node.stats} letter={this.state.letter} />
-      	<Board node={this.state.node} symm={this.state.symm} click={(p)=>this.squareClick(p)} />
+      	<Board node={this.state.node} symm={this.state.symm} click={(n,s)=>this.squareClick(n,s)} />
       </div>
     );
   }
