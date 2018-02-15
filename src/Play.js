@@ -14,7 +14,17 @@ class Play extends Component {
   }
 
   squareClick(p) {
-
+    console.log(p);
+    // var symm = this.state.symm;
+    // var move = next(this.state.node);
+    // while (!move.length) {
+    //   symm++;
+    //   move = next(this.state.node);
+    // }
+    // this.setState({node:move[0],player:false,symm:symm});
+    // function next(n) {
+    //   return n.children.filter(c=>c.pos===p);
+    // }
   }
 
   compMove() {
@@ -34,11 +44,10 @@ class Play extends Component {
       <div className="Play">
       	<div><button onClick={this.props.click} >watch comp train</button></div>
       	<Display node={this.state.node} />
-      	<Board node={this.state.node} symm={this.state.symm} squareClick={(p)=>this.squareClick(p)} />
+      	<Board node={this.state.node} symm={this.state.symm} click={(p)=>this.squareClick(p)} />
       </div>
     );
   }
 }
 
 export default Play;
-

@@ -29,8 +29,8 @@ function Board(props) {
 	}
 
 	function makeSquare(s,i) {
-		// TODO: add non clicks for occupied vals
-		return <Square key={i} s={s} val={symmVal(s)} click={()=>squareClick(s)} />;
+		var val = symmVal(s);
+		return !val ? <Square key={i} s={s} click={()=>squareClick(s)} /> : <Square key={i} s={s} val={val} />;
 	}
 
 	function makeTrainBoard(s,i) {
@@ -63,7 +63,7 @@ function Board(props) {
 	}
 
 	function squareClick(p) {
-		props.squareClick && props.squareClick(p);
+		props.click(p);
 	}
 
 	return (

@@ -22,13 +22,15 @@ class Train extends Component {
   }
 
   changeSpeed() {
+    var oldSpeed = this.state.delay;
     var speed = prompt('ms b/w moves');
     this.setState({delay:speed,paused:true});
+    setTimeout(()=>this.setState({paused:false}),oldSpeed);
   }
 
   changeSymm() {
     var symm = prompt('0-7');
-    symm === '-1' ? this.setState({symm:this.randomSymm(),randSymm:true}) : this.setState({symm:symm});
+    symm === '-1' ? this.setState({paused:true,symm:this.randomSymm(),randSymm:true}) : this.setState({paused:true,symm:symm});
   }
 
   randomSymm() {
@@ -51,7 +53,7 @@ class Train extends Component {
     var node = currGame.moves[this.state.move];
     return (
       <div className="Train">
-      	<div><button onClick={this.props.click} >play against the computer</button><button onClick={()=>this.togglePause()}>{this.state.paused ? 'resume' : 'pause'}</button><button onClick={()=>this.changeSymm()}>change symm</button><button onClick={()=>this.changeSpeed()}>change speed</button></div>
+      	<div><button onClick={()=>this.props.click()} >play against the computer</button><button onClick={()=>this.togglePause()}>{this.state.paused ? 'resume' : 'pause'}</button><button onClick={()=>this.changeSymm()}>change symm</button><button onClick={()=>this.changeSpeed()}>change speed</button></div>
         <div>Game {this.state.game+1} of {data.games.length} - LeafID: {currGame.leafID} - Res: {currGame.res} - Moves: {currGame.moves.length-1} - Symm: {this.state.symm}</div>
       	<Display node={node} />
         <Board node={node} symm={this.state.symm} />

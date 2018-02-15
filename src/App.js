@@ -7,7 +7,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      play: false,
+      play: true,
     };
   }
 
@@ -17,9 +17,9 @@ class App extends Component {
   }
 
   render() {
-    var game = this.state.play ? <Play click={()=>this.switchPlay()} /> : <Train click={()=>this.switchPlay()} />;
+    var mode = this.state.play ? <Play click={()=>this.switchPlay()} /> : <Train click={()=>this.switchPlay()} />;
     return (
-      <div className="App">{game}</div>
+      <div className="App">{mode}</div>
     );
   }
 }
