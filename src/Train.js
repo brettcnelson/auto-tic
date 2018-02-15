@@ -10,13 +10,23 @@ class Train extends Component {
       paused: false,
       game:0,
       move:0,
-      symm:0
+      symm:0,
+      randSymm:false
     };
   }
 
   togglePause() {
     var paused = this.state.paused;
     this.setState({paused:!paused});
+  }
+
+  changeSymm() {
+    var symm = prompt('0-7');
+    symm === '-1' ? this.setState({symm:this.randomSymm(),randSymm:true}) : this.setState({symm:symm});
+  }
+
+  randomSymm() {
+    return Math.floor(Math.random()*8);
   }
 
   render() {
@@ -29,13 +39,14 @@ class Train extends Component {
       }
       else if (data.games[this.state.game+1]) {
         var game = this.state.game;
-        setTimeout(()=>!this.state.paused && this.setState({game:game+1,move:0}),delay)
+        var symm = this.state.randSymm ? this.randomSymm() : this.state.symm;
+        setTimeout(()=>!this.state.paused && this.setState({game:game+1,move:0,symm:symm}),delay)
       }
     }
     var node = currGame.moves[this.state.move];
     return (
       <div className="Train">
-      	<div><button onClick={this.props.click} >play against the computer</button><button onClick={()=>this.togglePause()}>{this.state.paused ? 'resume' : 'pause'}</button></div>
+      	<div><button onClick={this.props.click} >play against the computer</button><button onClick={()=>this.togglePause()}>{this.state.paused ? 'resume' : 'pause'}</button><button onClick={()=>this.changeSymm()}>change symm</button></div>
         <div>Game {this.state.game+1} of {data.games.length} - LeafID: {currGame.leafID} - Res: {currGame.res} - Moves: {currGame.moves.length-1} - Symm: {this.state.symm}</div>
       	<Display node={node} />
         <Board node={node} symm={this.state.symm} />
