@@ -94,7 +94,7 @@ for (var i = 0 ; i < 16889 ; i++) {
 
 var data = {
   tree: tree,
-  games: games.slice(0,10)
+  games: games
 }
 
 export default data;

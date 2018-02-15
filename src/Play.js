@@ -42,21 +42,3 @@ class Play extends Component {
 
 export default Play;
 
-
-//           compMove() {
-//     var node;
-//     if (this.state.node.children.length) {
-//       var move = this.state.move+1;
-//       node = data.games[this.state.game].moves[move];
-//       this.setState({move:move,node:node});
-//     }
-//     else if (data.games[this.state.game+1]) {
-//       var game = this.state.game+1;
-//       node = data.games[game].moves[0];
-//       this.setState({game:game,move:0,node:node});
-//     }
-//   }
-
-// setTimeout(()=>this.compMove(),200);
-//     var game = data.games[this.state.game];
-
