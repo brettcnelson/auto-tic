@@ -17,9 +17,7 @@ class App extends Component {
   }
 
   render() {
-    var game = this.state.play ? 
-      <Play click={()=>this.switchPlay()} /> :
-      <Train click={()=>this.switchPlay()} />;
+    var game = this.state.play ? <Play click={()=>this.switchPlay()} /> : <Train click={()=>this.switchPlay()} />;
     return (
       <div className="App">{game}</div>
     );

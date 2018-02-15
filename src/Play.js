@@ -14,14 +14,7 @@ class Play extends Component {
   }
 
   squareClick(p) {
-  	var symm = this.state.symm;
-  	var move = this.state.node.children.filter(c=>data.symms[symm].indexOf(c.pos)===data.symms[0].indexOf(p));
-  	while (!move) {
-  		console.log('symm search',move)
-  		symm++;
-  		move = this.state.node.children.filter(c=>data.symms[symm].indexOf(c.pos)===data.symms[0].indexOf(p));
-  	}
-  	this.setState({node:move[0],player:false,symm:symm});
+
   }
 
   compMove() {
@@ -48,3 +41,22 @@ class Play extends Component {
 }
 
 export default Play;
+
+
+//           compMove() {
+//     var node;
+//     if (this.state.node.children.length) {
+//       var move = this.state.move+1;
+//       node = data.games[this.state.game].moves[move];
+//       this.setState({move:move,node:node});
+//     }
+//     else if (data.games[this.state.game+1]) {
+//       var game = this.state.game+1;
+//       node = data.games[game].moves[0];
+//       this.setState({game:game,move:0,node:node});
+//     }
+//   }
+
+// setTimeout(()=>this.compMove(),200);
+//     var game = data.games[this.state.game];
+
