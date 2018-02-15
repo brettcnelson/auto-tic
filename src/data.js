@@ -85,7 +85,6 @@ Node.prototype.play = function() {
 
 var tree = new Node();
 tree.makeTree();
-console.log(tree)
 
 function Game() {
   this.moves = [];
@@ -95,7 +94,6 @@ for (var j = 0 ; j < 16889 ; j++) {
   games.push(new Game());
   tree.play();
 }
-console.log(games[0].moves[1])
 
 var data = {
   tree: tree,

@@ -8,9 +8,20 @@ class Play extends Component {
     super(props);
     this.state = {
       node: data.tree,
+      first: false,
       player: false,
       symm: 0
     };
+  }
+
+  changePlayer() {
+    var player = this.state.first;
+    this.setState({node:data.tree,first:!player,player:!player,symm:0});
+  }
+
+  playAgain() {
+    var player = this.state.first;
+    this.setState({node:data.tree,symm:0,player:player});
   }
 
   squareClick(p) {
@@ -42,7 +53,7 @@ class Play extends Component {
   	!this.state.player && setTimeout(()=>this.compMove(),1000);
     return (
       <div className="Play">
-      	<div><button onClick={this.props.click} >watch comp train</button></div>
+      	<div><button onClick={this.props.click} >watch comp train</button><button onClick={()=>this.changePlayer()} >{this.state.first ? 'let the comp go first' : 'you go first'}</button><button onClick={()=>this.playAgain()}>play again</button></div>
       	<Display stats={this.state.node.stats} letter={this.state.letter} />
       	<Board node={this.state.node} symm={this.state.symm} click={(p)=>this.squareClick(p)} />
       </div>

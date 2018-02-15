@@ -23,14 +23,16 @@ class Train extends Component {
 
   changeSpeed() {
     var oldSpeed = this.state.delay;
-    var speed = prompt('ms b/w moves');
-    this.setState({delay:speed,paused:true});
-    setTimeout(()=>this.setState({paused:false}),oldSpeed);
+    var speed = prompt(`${oldSpeed} - ms b/w moves`);
+    if (speed) {
+      this.setState({delay:speed,paused:true});
+      setTimeout(()=>this.setState({paused:false}),oldSpeed);
+    }
   }
 
   changeSymm() {
     var symm = prompt('0-7');
-    symm === '-1' ? this.setState({paused:true,symm:this.randomSymm(),randSymm:true}) : this.setState({paused:true,symm:symm});
+    symm === '-1' ? this.setState({paused:true,symm:this.randomSymm(),randSymm:true}) : symm && this.setState({paused:true,symm:symm,randSymm:false});
   }
 
   randomSymm() {
@@ -46,7 +48,6 @@ class Train extends Component {
         setTimeout(()=>!this.state.paused && this.setState({move:move+1}),this.state.delay);
       }
       else if (data.games[this.state.game+1]) {
-        console.log('GSDLKMDSMSD')
         var game = this.state.game;
         var symm = this.state.randSymm ? this.randomSymm() : this.state.symm;
         setTimeout(()=>!this.state.paused && this.setState({game:game+1,move:0,symm:symm}),this.state.delay);

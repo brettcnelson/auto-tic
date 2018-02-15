@@ -17,9 +17,8 @@ class App extends Component {
   }
 
   render() {
-    var mode = this.state.play ? <Play click={()=>this.switchPlay()} /> : <Train click={()=>this.switchPlay()} />;
     return (
-      <div className="App">{mode}</div>
+      <div className="App">{this.state.play ? <Play click={()=>this.switchPlay()} /> : <Train click={()=>this.switchPlay()} />}</div>
     );
   }
 }
