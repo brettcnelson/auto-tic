@@ -39,23 +39,24 @@ class Train extends Component {
 
   render() {
     var currGame = data.games[this.state.game];
+    var node = currGame.moves[this.state.move];
     if (!this.state.paused) {
       if (currGame.moves[this.state.move+1]) {
         var move = this.state.move;
         setTimeout(()=>!this.state.paused && this.setState({move:move+1}),this.state.delay);
       }
       else if (data.games[this.state.game+1]) {
+        console.log('GSDLKMDSMSD')
         var game = this.state.game;
         var symm = this.state.randSymm ? this.randomSymm() : this.state.symm;
         setTimeout(()=>!this.state.paused && this.setState({game:game+1,move:0,symm:symm}),this.state.delay);
       }
     }
-    var node = currGame.moves[this.state.move];
     return (
       <div className="Train">
       	<div><button onClick={()=>this.props.click()} >play against the computer</button><button onClick={()=>this.togglePause()}>{this.state.paused ? 'resume' : 'pause'}</button><button onClick={()=>this.changeSymm()}>change symm</button><button onClick={()=>this.changeSpeed()}>change speed</button></div>
         <div>Game {this.state.game+1} of {data.games.length} - LeafID: {currGame.leafID} - Res: {currGame.res} - Moves: {currGame.moves.length-1} - Symm: {this.state.symm}</div>
-      	<Display node={node} />
+      	<Display stats={node.stats} letter={node.letter} />
         <Board node={node} symm={this.state.symm} />
       </div>
     );

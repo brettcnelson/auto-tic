@@ -43,7 +43,7 @@ class Play extends Component {
     return (
       <div className="Play">
       	<div><button onClick={this.props.click} >watch comp train</button></div>
-      	<Display node={this.state.node} />
+      	<Display stats={this.state.node.stats} letter={this.state.letter} />
       	<Board node={this.state.node} symm={this.state.symm} click={(p)=>this.squareClick(p)} />
       </div>
     );

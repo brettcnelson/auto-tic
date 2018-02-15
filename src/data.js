@@ -3,7 +3,7 @@ var symms = [[1,2,3,4,5,6,7,8,9],[7,4,1,8,5,2,9,6,3],[9,8,7,6,5,4,3,2,1],[3,6,9,
 var games = [];
 var leafID = 1;
 
-function Node(p,b) {
+function Node(p,b,i) {
   this.parent = p || null;
   this.board = b || {};
   this.letter = !p || p.letter === 'X' ? 'O' : 'X';
@@ -62,7 +62,11 @@ Node.prototype.makeTree = function() {
 };
 
 Node.prototype.play = function() {
-  games[games.length-1].moves.push(Object.assign({},this));
+  var newMove = Object.assign({},this,{stats:{},parent:undefined});
+  for (var key in this.stats) {
+    newMove.stats[key] = this.stats[key];
+  }
+  games[games.length-1].moves.push(newMove);
   if (!this.gameOver()) {
     var nextMove = this.children.reduce(pick);
     nextMove.play();
@@ -79,18 +83,19 @@ Node.prototype.play = function() {
   }
 };
 
+var tree = new Node();
+tree.makeTree();
+console.log(tree)
+
 function Game() {
   this.moves = [];
 }
 
-var tree = new Node();
-tree.makeTree();
-
-
-for (var i = 0 ; i < 16889 ; i++) {
+for (var j = 0 ; j < 16889 ; j++) {
   games.push(new Game());
   tree.play();
 }
+console.log(games[0].moves[1])
 
 var data = {
   tree: tree,

@@ -14,10 +14,7 @@ function Board(props) {
 	}
 
 	function endBoard() {
-		if (Array.isArray(props.node.res)) {
-			return renderBoard(makeWinBoard);
-		}
-		return renderBoard(makeTieBoard);
+		return Array.isArray(props.node.res) ? renderBoard(makeWinBoard) : renderBoard(makeTieBoard);
 	}
 
 	function playingBoard() {
