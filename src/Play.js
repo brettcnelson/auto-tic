@@ -34,18 +34,18 @@ class Play extends Component {
     function pick(a,b) {
       return stats(b) > stats(a) ? b : a;
       function stats(n) {
-        return (n.stats.wins-n.stats.losses)/n.total;
+        return (n.stats.wins-n.stats.losses)/n.stats.total;
       }
     }
   }
 
   render() {
-  	!this.state.player && setTimeout(()=>this.compMove(),1000);
+  	!this.state.player && this.state.node.children.length && setTimeout(()=>this.compMove(),1000);
     return (
       <div className="Play">
       	<div><button onClick={this.props.click} >watch comp train</button><button onClick={()=>this.changePlayer()} >{this.state.first ? 'let the comp go first' : 'you go first'}</button><button onClick={()=>this.playAgain()}>play again</button></div>
       	<Display stats={this.state.node.stats} letter={this.state.letter} />
-      	<Board node={this.state.node} symm={this.state.symm} click={(n,s)=>this.squareClick(n,s)} />
+      	<Board node={this.state.node} symm={this.state.symm} click={(n,s)=>this.squareClick(n,s)} comp={!this.state.player} />
       </div>
     );
   }

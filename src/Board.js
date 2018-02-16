@@ -3,12 +3,20 @@ import './Board.css';
 import Square from './Square';
 
 function Board(props) {
+	var symms = [[1,2,3,4,5,6,7,8,9],[7,4,1,8,5,2,9,6,3],[9,8,7,6,5,4,3,2,1],[3,6,9,2,5,8,1,4,7],[3,2,1,6,5,4,9,8,7],[9,6,3,8,5,2,7,4,1],[7,8,9,4,5,6,1,2,3],[1,4,7,2,5,8,3,6,9]];
+	var currSymms = findSymms();
+
+	function findSymms() {
+		var board = props.node.board;
+		return symms.filter(s=>s.every((v,i)=>board[v]===board[i+1]));
+	}
+
 	function makeBoard() {
 		if (props.node.res) {
 			return endBoard();
 		}
 		if (props.click) {
-			return playingBoard();
+			return props.comp ? computerBoard() : playingBoard();
 		}
 		return trainingBoard();
 	}
@@ -21,13 +29,22 @@ function Board(props) {
 		return renderBoard(makeSquare);
 	}
 
+	function computerBoard() {
+		return renderBoard(makeCompBoard);
+	}
+
+	function makeCompBoard(s,i) {
+		return <Square key={i} s={s} r={symmTransform(s)} val={symmVal(s)} /> 
+	}
+
 	function trainingBoard() {
 		return renderBoard(makeTrainBoard);
 	}
 
 	function makeSquare(s,i) {
 		var val = symmVal(s);
-		return !val ? <Square key={i} s={s} click={()=>squareClick(s)} /> : <Square key={i} s={s} val={val} />;
+		var r = symmTransform(s);
+		return !val ? <Square key={i} r={r} s={s} click={()=>squareClick(r)} /> : <Square key={i} r={r} s={s} val={val} />;
 	}
 
 	function makeTrainBoard(s,i) {
@@ -53,33 +70,41 @@ function Board(props) {
 		return squares.map((r,i)=><div key={i} >{r.map(cb)}</div>)
 	}
 
-	function symmVal(s) {
-		return props.node.board[symmTransform(s)];
+	function symmVal(s,symm) {
+		return props.node.board[symmTransform(s,symm)];
 	}
 
 	function symmTransform(s,symm) {
-		var symms = [[1,2,3,4,5,6,7,8,9],[7,4,1,8,5,2,9,6,3],[9,8,7,6,5,4,3,2,1],[3,6,9,2,5,8,1,4,7],[3,2,1,6,5,4,9,8,7],[9,6,3,8,5,2,7,4,1],[7,8,9,4,5,6,1,2,3],[1,4,7,2,5,8,3,6,9]];
-		return symms[symm || props.symm][s-1];
-	}
-
-	function findNode(board,symm) {
-		// var board = Object.assign({},props.node.board);
-		// board[]
+		return symms[symm !== undefined ? symm : props.symm][s-1];
 	}
 
 	function squareClick(p) {
-		// var symm = props.symm;
-		// var node = findNode(symm);
-		// while (!node) {
-		// 	console.log(!props.node.children.some(function(c,i) {node = c;return symmTransform(c.pos,symm)===p;}),node)
-		// 	node = findNode(symm++);
+		var node;
+		var children = props.node.children;
+		var tempSymm;
+		var j = 0;
+		while (!node) {
+			tempSymm = symms.indexOf(currSymms[j++]);
+			for (var i = 0 ; i < children.length ; i++) {
+				if (children[i].pos === symmTransform(p,tempSymm)) {
+					node = children[i]
+				}
+			}
+		}
+		props.click(node,tempSymm)
+		// function isSameBoard(b1,b2) {
+		// 	for (var key in b1) {
+		// 		if (b1[key] !== b2[key]) {
+		// 			return false;
+		// 		}
+		// 	}
+		// 	return true;
 		// }
-		// props.click(node,symm);
 	}
 
 	return (
 		<div className='Board'>
-			<div>symms: {props.symm}</div>
+			<div>symms: {currSymms.length}</div>
 			<div>{makeBoard()}</div>
 		</div>
 	)
