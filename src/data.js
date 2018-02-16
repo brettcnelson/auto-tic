@@ -26,25 +26,27 @@ Node.prototype.update = function(win,rando) {
     node = node.parent;
   }
   function winner(node) {
-    if (rando) {
-      if (node === this) {
-        rand.push(new Game());
-        rand[rand.length-1].leafID = this.leafID;
-        rand[rand.length-1].res = Array.isArray(this.res) ? this.lettter : 'tie';
-      }
-      var newMove = Object.assign({},node,{stats:{},parent:undefined});
-      for (var key in node.stats) {
-        newMove.stats[key] = node.stats[key];
-      }
-      rand[rand.length-1].moves.push(newMove);
-      if (!node.parent) {
-        rand[rand.length-1].moves.reverse();
-      }
-    }
+    if (rando) {tree.call(this,node)}
     node.letter === this.letter ? node.stats.wins++ : node.stats.losses++;
   }
   function tieer(node) {
+    if (rando) {tree.call(this,node)}
     node.stats.ties++;
+  }
+  function tree(node) {
+    if (node === this) {
+      rand.push(new Game());
+      rand[rand.length-1].leafID = this.leafID;
+      rand[rand.length-1].res = Array.isArray(this.res) ? this.letter : 'tie';
+    }
+    var newMove = Object.assign({},node,{stats:{},parent:undefined});
+    for (var key in node.stats) {
+      newMove.stats[key] = node.stats[key];
+    }
+    rand[rand.length-1].moves.push(newMove);
+    if (!node.parent) {
+      rand[rand.length-1].moves.reverse();
+    }
   }
 };
 
@@ -101,7 +103,6 @@ Node.prototype.play = function() {
 
 var tree = new Node();
 tree.makeTree();
-console.log('TREE',tree.stats.total)
 
 function Game() {
   this.moves = [];
@@ -112,13 +113,10 @@ for (var j = 0 ; j < 16889 ; j++) {
   tree.play();
 }
 
-console.log(rand)
-console.log(games)
-
 var data = {
   tree: tree,
-  // games: games
-  games: rand
+  games: games,
+  all: rand
 }
 
 export default data;

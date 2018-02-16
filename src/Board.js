@@ -34,7 +34,7 @@ function Board(props) {
 		var pos = symmTransform(s);
 		return props.node.board[pos] || props.node.children.some(c=>c.pos===pos) ?
 			<Square key={i} s={s} val={symmVal(s)} /> :
-			<Square key={i} s={s} val={symmVal(s)} color={'green'} />;
+			<Square key={i} s={s} val={symmVal(s)} color={'gray'} />;
 	}
 
 	function makeTieBoard(s,i) {
@@ -78,7 +78,10 @@ function Board(props) {
 	}
 
 	return (
-		<div className='Board'>{makeBoard()}</div>
+		<div className='Board'>
+			<div>symms: {props.symm}</div>
+			<div>{makeBoard()}</div>
+		</div>
 	)
 }
 
