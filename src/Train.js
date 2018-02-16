@@ -11,7 +11,7 @@ class Train extends Component {
       paused: false,
       game:0,
       move:0,
-      symm:0,
+      symm:1,
       randSymm:false,
       delay: 1000
     };

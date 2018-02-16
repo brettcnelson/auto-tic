@@ -8,9 +8,9 @@ class Play extends Component {
     super(props);
     this.state = {
       node: data.tree,
+      board: data.tree.board,
       first: false,
-      player: false,
-      symm: 0
+      player: false
     };
   }
 
@@ -24,8 +24,8 @@ class Play extends Component {
     this.setState({node:data.tree,symm:0,player:player});
   }
 
-  squareClick(n,s) {
-    this.setState({node:n,player:false,symm:s});
+  squareClick(n,board) {
+    this.setState({node:n,player:false,board:board});
   }
 
   compMove() {

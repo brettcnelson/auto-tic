@@ -4,11 +4,22 @@ var games = [];
 var rand = [];
 var leafID = 1;
 
+function Boards(b,i) {
+  this[1] = {pos:i,board:b || {}};
+  var board;
+  for (var j = 2 ; j < 9 ; j++) {
+    board = {};
+    for (var key in b) {
+      board[symms[j-1][key-1]] = b[key];
+    }
+    this[j] = {pos:symms[j-1][i-1],board:board};
+  }
+}
+
 function Node(p,b,i) {
   this.parent = p || null;
-  this.board = b || {};
   this.letter = !p || p.letter === 'X' ? 'O' : 'X';
-  this.pos = i || null;
+  this.boards = new Boards(b,i);
   this.stats = {wins:0,losses:0,ties:0,total:0};
   this.children = [];
 }
@@ -51,28 +62,28 @@ Node.prototype.update = function(win,rando) {
 };
 
 Node.prototype.gameOver = function(rand) {
-  var i = wins.filter(w=>w.every(s=>this.board[s]===this.letter));
+  var i = wins.filter(w=>w.every(s=>this.boards[1].board[s]===this.letter));
   if (i.length) {
     this.update(i,rand);
     return true;
   }
-  if (Object.keys(this.board).length === 9) {
+  if (Object.keys(this.boards[1].board).length === 9) {
     this.update(null,rand);
     return true;
   }
 };
 
 Node.prototype.symmCheck = function(nodeBoard) {
-  return this.children.every(c=>!symms.some(symm=>symm.every((s,i)=>c.board[i+1]===nodeBoard[s])));
+  return this.children.every(c=>!symms.some(symm=>symm.every((s,i)=>c.boards[1].board[i+1]===nodeBoard[s])));
 };
 
 Node.prototype.makeTree = function() {
   if (!this.gameOver(true)) {
     for (var i = 1 ; i < 10 ; i++) {
-      if (!this.board[i]) {
-        var testBoard = Object.assign({},this.board);
+      if (!this.boards[1].board[i]) {
+        var testBoard = Object.assign({},this.boards[1].board);
         testBoard[i] = this.letter === 'X' ? 'O' : 'X';
-        this.symmCheck(testBoard) && this.children.push(new Node(this,testBoard,i));
+        this.symmCheck(testBoard,i) && this.children.push(new Node(this,testBoard,i));
       }
     }
     this.children.forEach(c=>c.makeTree());
