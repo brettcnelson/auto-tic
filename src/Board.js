@@ -9,6 +9,7 @@ function Board(props) {
 	function findSymms() {
 		var board = props.node.board;
 		return symms.filter(s=>s.every((v,i)=>board[v]===board[i+1]));
+		// symmTransform(v)
 	}
 
 	function makeBoard() {
@@ -44,14 +45,14 @@ function Board(props) {
 	function makeSquare(s,i) {
 		var val = symmVal(s);
 		var r = symmTransform(s);
-		return !val ? <Square key={i} r={r} s={s} click={()=>squareClick(r)} /> : <Square key={i} r={r} s={s} val={val} />;
+		return !val ? <Square key={i} r={r} s={s} click={()=>squareClick(s)} /> : <Square key={i} r={r} s={s} val={val} />;
 	}
 
 	function makeTrainBoard(s,i) {
 		var pos = symmTransform(s);
 		return props.node.board[pos] || props.node.children.some(c=>c.pos===pos) ?
-			<Square key={i} s={s} val={symmVal(s)} /> :
-			<Square key={i} s={s} val={symmVal(s)} color={'gray'} />;
+			<Square key={i} s={s} r={pos} val={symmVal(s)} /> :
+			<Square key={i} s={s} r={pos} val={symmVal(s)} color={'gray'} />;
 	}
 
 	function makeTieBoard(s,i) {
@@ -87,25 +88,22 @@ function Board(props) {
 			tempSymm = symms.indexOf(currSymms[j++]);
 			for (var i = 0 ; i < children.length ; i++) {
 				if (children[i].pos === symmTransform(p,tempSymm)) {
-					node = children[i]
+					// node = children[i].board[symmTransform(p,tempSymm)] ? children[i] : undefined;
+					node = children[i];
 				}
 			}
 		}
-		props.click(node,tempSymm)
-		// function isSameBoard(b1,b2) {
-		// 	for (var key in b1) {
-		// 		if (b1[key] !== b2[key]) {
-		// 			return false;
-		// 		}
-		// 	}
-		// 	return true;
-		// }
+		var board1 = Object.assign({},node.board);
+		var board2 = Object.assign({},props.node.board);
+		board2[p] = props.node.letter === 'X' ? 'O' : 'X';
+		tempSymm = symms.indexOf(symms.filter(symm=>symm.every((s,i)=>board1[i+1]===board2[s]))[0]);
+		props.click(node,tempSymm);
 	}
 
 	return (
 		<div className='Board'>
-			<div>symms: {currSymms.length}</div>
 			<div>{makeBoard()}</div>
+			<div>symms: {currSymms.length} - {JSON.stringify(currSymms.map(s=>symms.indexOf(s)))}<div>{JSON.stringify(currSymms)}</div></div>
 		</div>
 	)
 }

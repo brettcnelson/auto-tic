@@ -44,7 +44,8 @@ class Play extends Component {
     return (
       <div className="Play">
       	<div><button onClick={this.props.click} >watch comp train</button><button onClick={()=>this.changePlayer()} >{this.state.first ? 'let the comp go first' : 'you go first'}</button><button onClick={()=>this.playAgain()}>play again</button></div>
-      	<Display stats={this.state.node.stats} letter={this.state.letter} />
+      	<div>Symm: {this.state.symm}</div>
+        <Display stats={this.state.node.stats} letter={this.state.letter} />
       	<Board node={this.state.node} symm={this.state.symm} click={(n,s)=>this.squareClick(n,s)} comp={!this.state.player} />
       </div>
     );
