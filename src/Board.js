@@ -1,10 +1,13 @@
 import React from 'react';
-import { symms } from './data';
 import './Board.css';
 import Square from './Square';
 
 function Board(props) {
-	var board = props.node.boards[props.symm].board;
+	var board = props.node.board;
+
+	function convert(s) {
+		return props.symms[props.symm-1][s-1];
+	}
 
 	function makeBoard() {
 		if (props.node.res) {
@@ -21,14 +24,15 @@ function Board(props) {
 	}
 
 	function makeWinBoard(s,i) {
-		var val = board[s];
-		return props.node.res.some(win=>win.some(w=>s===symms[props.symm-1][w-1])) ?
+		var square = convert(s);
+		var val = board[square];
+		return props.node.res.some(win=>win.some(w=>square===w)) ?
 			<Square key={i} val={val} color={'red'} /> :
 			<Square key={i} val={val} color={'gray'} />;
 	}
 
 	function makeTieBoard(s,i) {
-		return <Square key={i} val={board[s]} color={'yellow'} />;
+		return <Square key={i} val={board[convert(s)]} color={'yellow'} />;
 	}
 
 	function computerBoard() {
@@ -36,7 +40,7 @@ function Board(props) {
 	}
 
 	function makeCompBoard(s,i) {
-		return <Square key={i} val={board[s]} /> 
+		return <Square key={i} val={board[convert(s)]} /> 
 	}
 
 	function playingBoard() {
@@ -44,7 +48,7 @@ function Board(props) {
 	}
 
 	function makeSquare(s,i) {
-		var val = board[s];
+		var val = board[convert(s)];
 		return !val ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} val={val} />;
 	}
 
@@ -53,8 +57,9 @@ function Board(props) {
 	}
 
 	function makeTrainBoard(s,i) {
-		return board[s] || props.node.children.some(c=>c.boards[props.symm].pos===s) ?
-			<Square key={i} val={board[s]} /> :
+		var square = convert(s);
+		return board[square] || props.node.children.some(c=>convert(c.pos)===s) ?
+			<Square key={i} val={board[square]} /> :
 			<Square key={i} color={'gray'} />;
 	}
 

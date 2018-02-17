@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { data } from './data';
+import { data,symms } from './data';
 import Display from './Display';
 import Board from './Board';
 
@@ -35,7 +35,7 @@ class Train extends Component {
   changeSpeed() {
     var oldSpeed = this.state.delay;
     var speed = prompt(`${oldSpeed} - ms b/w moves`);
-    if (speed) {
+    if (Number(speed)) {
       this.setState({delay:speed,paused:true});
       setTimeout(()=>this.setState({paused:false}),oldSpeed);
     }
@@ -71,7 +71,7 @@ class Train extends Component {
         <div><button onClick={()=>this.toggleGames()} >{this.state.games ? 'build tree' : 'training games'}</button><button onClick={()=>this.togglePause()}>{this.state.paused ? 'resume' : 'pause'}</button><button onClick={()=>this.changeSymm()}>change symm</button><button onClick={()=>this.changeSpeed()}>change speed</button></div>
         <div>Game {this.state.game+1} of {games.length} - LeafID: {currGame.leafID} - Res: {currGame.res} - Moves: {currGame.moves.length-1} - Symm: {this.state.symm}</div>
       	<Display stats={node.stats} letter={node.letter} />
-        <Board node={node} symm={this.state.symm} />
+        <Board node={node} symm={this.state.symm} symms={symms} />
       </div>
     );
   }

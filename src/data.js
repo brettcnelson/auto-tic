@@ -1,30 +1,19 @@
 var wins = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,9],[1,5,9],[3,5,7]];
 var symms = [[1,2,3,4,5,6,7,8,9],[7,4,1,8,5,2,9,6,3],[9,8,7,6,5,4,3,2,1],[3,6,9,2,5,8,1,4,7],[3,2,1,6,5,4,9,8,7],[9,6,3,8,5,2,7,4,1],[7,8,9,4,5,6,1,2,3],[1,4,7,2,5,8,3,6,9]];
 var games = [];
-var rand = [];
+var random = [];
 var leafID = 1;
-
-function Boards(b,i) {
-  this[1] = {pos:i,board:b || {}};
-  var board;
-  for (var j = 2 ; j < 9 ; j++) {
-    board = {};
-    for (var key in b) {
-      board[symms[j-1][key-1]] = b[key];
-    }
-    this[j] = {pos:symms[j-1][i-1],board:board};
-  }
-}
 
 function Node(p,b,i) {
   this.parent = p || null;
   this.letter = !p || p.letter === 'X' ? 'O' : 'X';
-  this.boards = new Boards(b,i);
+  this.pos = i;
+  this.board = b || {};
   this.stats = {wins:0,losses:0,ties:0,total:0};
   this.children = [];
 }
 
-Node.prototype.update = function(win,rando) {
+Node.prototype.update = function(win,rand) {
   var cb = win ? winner.bind(this) : tieer;
   if (!this.leafID) {
     this.leafID = leafID++;
@@ -37,51 +26,51 @@ Node.prototype.update = function(win,rando) {
     node = node.parent;
   }
   function winner(node) {
-    if (rando) {tree.call(this,node)}
+    if (rand) {tree.call(this,node)}
     node.letter === this.letter ? node.stats.wins++ : node.stats.losses++;
   }
   function tieer(node) {
-    if (rando) {tree.call(this,node)}
+    if (rand) {tree.call(this,node)}
     node.stats.ties++;
   }
   function tree(node) {
     if (node === this) {
-      rand.push(new Game());
-      rand[rand.length-1].leafID = this.leafID;
-      rand[rand.length-1].res = Array.isArray(this.res) ? this.letter : 'tie';
+      random.push(new Game());
+      random[random.length-1].leafID = this.leafID;
+      random[random.length-1].res = Array.isArray(this.res) ? this.letter : 'tie';
     }
     var newMove = Object.assign({},node,{stats:{},parent:undefined});
     for (var key in node.stats) {
       newMove.stats[key] = node.stats[key];
     }
-    rand[rand.length-1].moves.push(newMove);
+    random[random.length-1].moves.push(newMove);
     if (!node.parent) {
-      rand[rand.length-1].moves.reverse();
+      random[random.length-1].moves.reverse();
     }
   }
 };
 
 Node.prototype.gameOver = function(rand) {
-  var i = wins.filter(w=>w.every(s=>this.boards[1].board[s]===this.letter));
+  var i = wins.filter(w=>w.every(s=>this.board[s]===this.letter));
   if (i.length) {
     this.update(i,rand);
     return true;
   }
-  if (Object.keys(this.boards[1].board).length === 9) {
+  if (Object.keys(this.board).length === 9) {
     this.update(null,rand);
     return true;
   }
 };
 
 Node.prototype.symmCheck = function(nodeBoard) {
-  return this.children.every(c=>!symms.some(symm=>symm.every((s,i)=>c.boards[1].board[i+1]===nodeBoard[s])));
+  return this.children.every(c=>!symms.some(symm=>symm.every((s,i)=>c.board[i+1]===nodeBoard[s])));
 };
 
 Node.prototype.makeTree = function() {
   if (!this.gameOver(true)) {
     for (var i = 1 ; i < 10 ; i++) {
-      if (!this.boards[1].board[i]) {
-        var testBoard = Object.assign({},this.boards[1].board);
+      if (!this.board[i]) {
+        var testBoard = Object.assign({},this.board);
         testBoard[i] = this.letter === 'X' ? 'O' : 'X';
         this.symmCheck(testBoard,i) && this.children.push(new Node(this,testBoard,i));
       }
@@ -126,7 +115,7 @@ for (var j = 0 ; j < 16889 ; j++) {
 
 var data = {
   games: games,
-  all: rand
+  all: random
 }
 
 module.exports = {
