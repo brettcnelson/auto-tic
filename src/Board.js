@@ -64,7 +64,7 @@ function Board(props) {
 	}
 
 	function squareClick(p) {
-		console.log(p)
+		props.click(p);
 	}
 
 	return (
