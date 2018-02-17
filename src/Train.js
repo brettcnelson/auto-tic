@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import data from './data';
+import { data } from './data';
 import Display from './Display';
 import Board from './Board';
 
@@ -47,7 +47,7 @@ class Train extends Component {
   }
 
   randomSymm() {
-    return Math.floor(Math.random()*8);
+    return Math.ceil(Math.random()*8);
   }
 
   render() {

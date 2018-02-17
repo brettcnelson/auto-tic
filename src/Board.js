@@ -1,4 +1,5 @@
 import React from 'react';
+import { symms } from './data';
 import './Board.css';
 import Square from './Square';
 
@@ -19,8 +20,15 @@ function Board(props) {
 		return Array.isArray(props.node.res) ? renderBoard(makeWinBoard) : renderBoard(makeTieBoard);
 	}
 
-	function playingBoard() {
-		return renderBoard(makeSquare);
+	function makeWinBoard(s,i) {
+		var val = board[s];
+		return props.node.res.some(win=>win.some(w=>s===symms[props.symm-1][w-1])) ?
+			<Square key={i} val={val} color={'red'} /> :
+			<Square key={i} val={val} color={'gray'} />;
+	}
+
+	function makeTieBoard(s,i) {
+		return <Square key={i} val={board[s]} color={'yellow'} />;
 	}
 
 	function computerBoard() {
@@ -31,8 +39,8 @@ function Board(props) {
 		return <Square key={i} val={board[s]} /> 
 	}
 
-	function trainingBoard() {
-		return renderBoard(makeTrainBoard);
+	function playingBoard() {
+		return renderBoard(makeSquare);
 	}
 
 	function makeSquare(s,i) {
@@ -40,21 +48,14 @@ function Board(props) {
 		return !val ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} val={val} />;
 	}
 
+	function trainingBoard() {
+		return renderBoard(makeTrainBoard);
+	}
+
 	function makeTrainBoard(s,i) {
 		return board[s] || props.node.children.some(c=>c.boards[props.symm].pos===s) ?
 			<Square key={i} val={board[s]} /> :
 			<Square key={i} color={'gray'} />;
-	}
-
-	function makeTieBoard(s,i) {
-		return <Square key={i} val={board[s]} color={'yellow'} />;
-	}
-
-	function makeWinBoard(s,i) {
-		var val = board[s];
-		return props.node.res.some(win=>win.some(w=>w===) ?
-			<Square key={i} s={s} val={val} color={'red'} /> :
-			<Square key={i} s={s} val={val} color={'gray'} />;
 	}
 
 	function renderBoard(cb) {
@@ -67,10 +68,7 @@ function Board(props) {
 	}
 
 	return (
-		<div className='Board'>
-			<div>{makeBoard()}</div>
-			<div>symms: {currSymms.length} - {JSON.stringify(currSymms.map(s=>symms.indexOf(s)))}<div>{JSON.stringify(currSymms)}</div></div>
-		</div>
+		<div className='Board'>{makeBoard()}</div>
 	)
 }
 

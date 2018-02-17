@@ -119,15 +119,18 @@ function Game() {
   this.moves = [];
 }
 
-for (var j = 0 ; j < 16889 ; j++) {
+for (var j = 0 ; j < 16888 ; j++) {
   games.push(new Game());
   tree.play();
 }
 
 var data = {
-  tree: tree,
   games: games,
   all: rand
 }
 
-export default data;
+module.exports = {
+  tree: tree,
+  data: data,
+  symms: symms
+};
