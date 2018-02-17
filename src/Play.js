@@ -72,7 +72,6 @@ class Play extends Component {
         symms.push(Number(key));
       }
     }
-    console.log(symms)
     this.setState({node:move,player:true,symm:symms[Math.floor(Math.random()*symms.length)]});
     function pick(a,b) {
       return stats(b) > stats(a) ? b : a;

@@ -7,7 +7,7 @@ class Train extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      games: false,
+      games: true,
       paused: false,
       game:0,
       move:0,
