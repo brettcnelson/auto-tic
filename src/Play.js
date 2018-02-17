@@ -10,7 +10,7 @@ class Play extends Component {
       node: tree,
       first: false,
       player: false,
-      symm: 1
+      symm: Math.ceil(Math.random()*8)
     };
   }
 
@@ -21,7 +21,7 @@ class Play extends Component {
 
   playAgain() {
     var player = this.state.first;
-    this.setState({node:tree,symm:1,player:player});
+    this.setState({node:tree,symm:Math.ceil(Math.random()*8),player:player});
   }
 
   squareClick(p) {
@@ -29,17 +29,15 @@ class Play extends Component {
     var children = this.state.node.children;
     var node = findChild(children,symm,p);
     if (!node) {
-      symm = 0;
-      while(!node) {
-        symm++;
-        node = findChild(children,symm,p);
-      }
       var ghostBoard = Object.assign({},this.state.node.boards[this.state.symm].board);
       ghostBoard[p] = this.state.node.letter === 'X' ? 'O' : 'X';
-      for (var key in node.boards) {
-        if (this.isSameBoard(ghostBoard,node.boards[key].board)) {
-          symm = key;
-          break;
+      for (var i = 0 ; i < children.length && !node ; i++) {
+        for (var key in children[i].boards) {
+          if (this.isSameBoard(ghostBoard,children[i].boards[key].board)) {
+            node = children[i];
+            symm = key;
+            break;
+          }
         }
       }
     }

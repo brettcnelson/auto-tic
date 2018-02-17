@@ -7,8 +7,8 @@ class Train extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      games: true,
-      paused: false,
+      games:true,
+      paused:false,
       game:0,
       move:0,
       symm:1,
@@ -42,7 +42,7 @@ class Train extends Component {
   }
 
   changeSymm() {
-    var symm = prompt('0-7');
+    var symm = prompt('1-8; -1 for random');
     symm === '-1' ? this.setState({paused:true,symm:this.randomSymm(),randSymm:true}) : symm && this.setState({paused:true,symm:symm,randSymm:false});
   }
 
@@ -68,7 +68,7 @@ class Train extends Component {
     return (
       <div className="Train">
       	<div><button onClick={()=>this.props.click()} >play against the computer</button></div>
-        <div><button onClick={()=>this.toggleGames()} >{this.state.games ? 'tree' : 'games'}</button><button onClick={()=>this.togglePause()}>{this.state.paused ? 'resume' : 'pause'}</button><button onClick={()=>this.changeSymm()}>change symm</button><button onClick={()=>this.changeSpeed()}>change speed</button></div>
+        <div><button onClick={()=>this.toggleGames()} >{this.state.games ? 'build tree' : 'training games'}</button><button onClick={()=>this.togglePause()}>{this.state.paused ? 'resume' : 'pause'}</button><button onClick={()=>this.changeSymm()}>change symm</button><button onClick={()=>this.changeSpeed()}>change speed</button></div>
         <div>Game {this.state.game+1} of {games.length} - LeafID: {currGame.leafID} - Res: {currGame.res} - Moves: {currGame.moves.length-1} - Symm: {this.state.symm}</div>
       	<Display stats={node.stats} letter={node.letter} />
         <Board node={node} symm={this.state.symm} />
