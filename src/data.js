@@ -119,7 +119,7 @@ function Game() {
   this.moves = [];
 }
 
-for (var j = 0 ; j < 16888 ; j++) {
+for (var j = 0 ; j < 16889 ; j++) {
   games.push(new Game());
   tree.play();
 }

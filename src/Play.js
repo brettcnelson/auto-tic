@@ -34,8 +34,10 @@ class Play extends Component {
         symm++;
         node = findChild(children,symm,p);
       }
+      var ghostBoard = Object.assign({},this.state.node.boards[this.state.symm].board);
+      ghostBoard[p] = this.state.node.letter === 'X' ? 'O' : 'X';
       for (var key in node.boards) {
-        if (node.boards[key].pos===p && this.isSameBoard(this.state.node.boards[this.state.symm].board,node.boards[symm].board)) {
+        if (this.isSameBoard(ghostBoard,node.boards[key].board)) {
           symm = key;
           break;
         }
@@ -64,11 +66,13 @@ class Play extends Component {
   compMove() {
     var move = this.state.node.children.reduce(pick);
     var symms = [];
+    var tempBoard = Object.assign({},move.boards[this.state.symm].board);
     for (var key in move.boards) {
-      if (this.isSameBoard(this.state.node.boards[this.state.symm].board,move.boards[key].board)) {
+      if (this.isSameBoard(tempBoard,move.boards[key].board)) {
         symms.push(Number(key));
       }
     }
+    console.log(symms)
     this.setState({node:move,player:true,symm:symms[Math.floor(Math.random()*symms.length)]});
     function pick(a,b) {
       return stats(b) > stats(a) ? b : a;
@@ -83,7 +87,7 @@ class Play extends Component {
     return (
       <div className="Play">
       	<div><button onClick={this.props.click} >watch comp train</button><button onClick={()=>this.changePlayer()} >{this.state.first ? 'let the comp go first' : 'you go first'}</button><button onClick={()=>this.playAgain()}>play again</button></div>
-        <Display stats={this.state.node.stats} letter={this.state.letter} />
+        <Display stats={this.state.node.stats} letter={this.state.node.letter} />
       	<Board node={this.state.node} symm={this.state.symm} click={(p)=>this.squareClick(p)} comp={!this.state.player} />
         <div>currSymm = {this.state.symm}</div>
       </div>
