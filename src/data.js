@@ -8,28 +8,22 @@ function Node(p,b,pos) {
   this.parent = p || null;
   this.letter = !p || p.letter === 'X' ? 'O' : 'X';
   this.pos = {};
-  this.boards = {0: b || {}};
-  this.identities = {};
+  this.boards = b ? {0: b} : {0:{}};
+  this.identities = [];
   this.stats = {wins:0,losses:0,ties:0,total:0};
   this.children = [];
-  if (pos) {
-    this.pos[p] = 0;
-    for (var i = 1 ; i < 8 ; i++) {
-      var r = this.pos[symms[i].indexOf(pos)+1];
-      !r && r = [];
-      r.push(i);
-      this.boards[i] = {};
-      for (var key in b) {
-        this.boards[i][symms[i][key-1]] = b[key];
-      }
+  if (pos) {this.pos[pos] = [0]}  
+  for (var i = 1 ; i < 8 ; i++) {
+    var index = symms[i].indexOf(pos)+1;
+    !this.pos[index] && (this.pos[index] = []);
+    this.pos[index].push(i);
+    this.boards[i] = {};
+    for (var key in b) {
+      this.boards[i][symms[i][key-1]] = b[key];
     }
-    for (var key in this.pos) {
-      if (this.pos[key].length > 1) {
-        this.pos[key].forEach(function(symm) {
-          this.identities[symm] = key;
-        });
-      }
-    }
+  }
+  for (key in this.pos) {
+    this.identities.push(this.pos[key]);
   }
 }
 
@@ -37,12 +31,10 @@ Node.prototype.makeTree = function() {
   if (!this.gameOver(true)) {
     for (var s = 1 ; s < 10 ; s++) {
       if (!this.boards[0][s]) {
-        var testBoard = Object.assign({},this.board);
+        var testBoard = Object.assign({},this.boards[0]);
         testBoard[s] = this.letter === 'X' ? 'O' : 'X';
-        for (var c = 0 ; c < this.children.length ; c++) {
-          if (symms.slice(1).every(symm=>!symm.every((s,i)=>testBoard[s]===this.children[c].boards[0][i+1]))) {
-            this.children.push(new Node(this,testBoard,s))
-          }
+        if (!this.children.some(c=>symms.slice(1).some(symm=>symm.every((s,i)=>testBoard[s]===c.boards[0][i+1])))) {
+          this.children.push(new Node(this,testBoard,s))
         }
       }
     }

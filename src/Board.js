@@ -1,16 +1,10 @@
 import React from 'react';
 import './Board.css';
-import { symms } from './data';
 import Square from './Square';
 
 function Board(props) {
-	var board = props.node.board;
-	// console.log(props.node)
-	// console.log(props.node.children.map(c=>c.symms[props.symm-1]))
-
-	function convert(s) {
-		return symms[props.symm-1][s-1];
-	}
+	var board = props.node.boards[props.symm];
+	console.log(props.node)
 
 	function makeBoard() {
 		if (props.node.res) {
@@ -27,15 +21,14 @@ function Board(props) {
 	}
 
 	function makeWinBoard(s,i) {
-		var square = convert(s);
-		var val = board[square];
-		return props.node.res.some(win=>win.some(w=>square===w)) ?
+		var val = board[s];
+		return props.node.res[props.symm].some(win=>win.some(w=>s===w)) ?
 			<Square key={i} val={val} color={'red'} /> :
 			<Square key={i} val={val} color={'gray'} />;
 	}
 
 	function makeTieBoard(s,i) {
-		return <Square key={i} val={board[convert(s)]} color={'yellow'} />;
+		return <Square key={i} val={board[s]} color={'yellow'} />;
 	}
 
 	function computerBoard() {
@@ -43,7 +36,7 @@ function Board(props) {
 	}
 
 	function makeCompBoard(s,i) {
-		return <Square key={i} val={board[convert(s)]} /> 
+		return <Square key={i} val={board[s]} /> 
 	}
 
 	function playingBoard() {
@@ -51,8 +44,8 @@ function Board(props) {
 	}
 
 	function makeSquare(s,i) {
-		var val = board[convert(s)];
-		return !val ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} val={val} />;
+		var val = board[s];
+		return !val ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} val={board[s]} />;
 	}
 
 	function trainingBoard() {
@@ -60,9 +53,8 @@ function Board(props) {
 	}
 
 	function makeTrainBoard(s,i) {
-		var square = convert(s);
-		return board[square] || props.node.children.some(c=>c.board[square]) ?
-			<Square key={i} val={board[square]} /> :
+		return board[s] || props.node.children.some(c=>c.pos[s] && c.pos[s] === props.symm) ?
+			<Square key={i} val={board[s]} /> :
 			<Square key={i} color={'gray'} />;
 	}
 
@@ -72,7 +64,7 @@ function Board(props) {
 	}
 
 	function squareClick(p) {
-		props.click(convert(p));
+		props.click(p);
 	}
 
 	return (
