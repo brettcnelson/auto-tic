@@ -10,7 +10,7 @@ class Play extends Component {
       node: tree,
       first: false,
       player: false,
-      symm: Math.ceil(Math.random()*8)
+      symm: 1
     };
   }
 
@@ -25,31 +25,11 @@ class Play extends Component {
   }
 
   squareClick(p) {
-    var symm = this.state.symm;
-    var children = this.state.node.children;
-    var node = findChild(children,symm,p);
-    if (!node) {
-      var ghostBoard = Object.assign({},this.state.node.boards[this.state.symm].board);
-      ghostBoard[p] = this.state.node.letter === 'X' ? 'O' : 'X';
-      for (var i = 0 ; i < children.length && !node ; i++) {
-        for (var key in children[i].boards) {
-          if (this.isSameBoard(ghostBoard,children[i].boards[key].board)) {
-            node = children[i];
-            symm = key;
-            break;
-          }
-        }
-      }
-    }
-    this.setState({node:node,player:false,symm:symm});
-    
-    function findChild(children,symm,p) {
-      for (var i = 0 ; i < children.length ; i++) {
-        if (children[i].boards[symm].pos === p) {
-          return children[i];
-        }
-      }
-    }
+    console.log('CLICKED',p)
+    var node = this.state.node.children.filter(c=>c.moves[p])[0];
+    console.log('MOVE',node)
+
+    this.setState({node:node,player:false});
   }
 
   isSameBoard(b1,b2) {
@@ -62,15 +42,12 @@ class Play extends Component {
   }
 
   compMove() {
-    var move = this.state.node.children.reduce(pick);
-    var symms = [];
-    var tempBoard = Object.assign({},move.boards[this.state.symm].board);
-    for (var key in move.boards) {
-      if (this.isSameBoard(tempBoard,move.boards[key].board)) {
-        symms.push(Number(key));
-      }
-    }
-    this.setState({node:move,player:true,symm:symms[Math.floor(Math.random()*symms.length)]});
+    var node = this.state.node.children.reduce(pick);
+    var moves = Object.keys(node.moves);
+    var symms = node.moves[moves[Math.floor(Math.random()*moves.length)]];
+    var symm = symms[Math.floor(Math.random()*symms.length)];
+    console.log(node,moves,symm)
+    this.setState({node:node,player:true,symm:symm+1});
     function pick(a,b) {
       return stats(b) > stats(a) ? b : a;
       function stats(n) {

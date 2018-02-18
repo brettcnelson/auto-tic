@@ -5,8 +5,8 @@ import Square from './Square';
 
 function Board(props) {
 	var board = props.node.board;
-	console.log(props.node)
-	console.log(props.node.children.map(c=>c.symms[props.symm-1]))
+	// console.log(props.node)
+	// console.log(props.node.children.map(c=>c.symms[props.symm-1]))
 
 	function convert(s) {
 		return symms[props.symm-1][s-1];
@@ -72,7 +72,7 @@ function Board(props) {
 	}
 
 	function squareClick(p) {
-		props.click(p);
+		props.click(convert(p));
 	}
 
 	return (
