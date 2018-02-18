@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { data,symms } from './data';
+import { data } from './data';
 import Display from './Display';
 import Board from './Board';
 
@@ -43,7 +43,7 @@ class Train extends Component {
 
   changeSymm() {
     var symm = prompt('1-8; -1 for random');
-    symm === '-1' ? this.setState({paused:true,symm:this.randomSymm(),randSymm:true}) : symm && this.setState({paused:true,symm:symm,randSymm:false});
+    symm === '-1' ? this.setState({paused:true,symm:this.randomSymm(),randSymm:true}) : Number(symm) && this.setState({paused:true,symm:symm,randSymm:false});
   }
 
   randomSymm() {
@@ -71,7 +71,7 @@ class Train extends Component {
         <div><button onClick={()=>this.toggleGames()} >{this.state.games ? 'build tree' : 'training games'}</button><button onClick={()=>this.togglePause()}>{this.state.paused ? 'resume' : 'pause'}</button><button onClick={()=>this.changeSymm()}>change symm</button><button onClick={()=>this.changeSpeed()}>change speed</button></div>
         <div>Game {this.state.game+1} of {games.length} - LeafID: {currGame.leafID} - Res: {currGame.res} - Moves: {currGame.moves.length-1} - Symm: {this.state.symm}</div>
       	<Display stats={node.stats} letter={node.letter} />
-        <Board node={node} symm={this.state.symm} symms={symms} />
+        <Board node={node} symm={this.state.symm} />
       </div>
     );
   }

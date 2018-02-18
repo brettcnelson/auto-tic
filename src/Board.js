@@ -1,12 +1,15 @@
 import React from 'react';
 import './Board.css';
+import { symms } from './data';
 import Square from './Square';
 
 function Board(props) {
 	var board = props.node.board;
+	console.log(props.node)
+	console.log(props.node.children.map(c=>c.symms[props.symm-1]))
 
 	function convert(s) {
-		return props.symms[props.symm-1][s-1];
+		return symms[props.symm-1][s-1];
 	}
 
 	function makeBoard() {
@@ -58,7 +61,7 @@ function Board(props) {
 
 	function makeTrainBoard(s,i) {
 		var square = convert(s);
-		return board[square] || props.node.children.some(c=>convert(c.pos)===s) ?
+		return board[square] || props.node.children.some(c=>c.board[square]) ?
 			<Square key={i} val={board[square]} /> :
 			<Square key={i} color={'gray'} />;
 	}

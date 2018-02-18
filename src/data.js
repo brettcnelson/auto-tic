@@ -4,10 +4,11 @@ var games = [];
 var random = [];
 var leafID = 1;
 
-function Node(p,b,i) {
+function Node(p,b,m,s) {
   this.parent = p || null;
   this.letter = !p || p.letter === 'X' ? 'O' : 'X';
-  this.pos = i;
+  this.moves = m || null;
+  this.symms = s || null;
   this.board = b || {};
   this.stats = {wins:0,losses:0,ties:0,total:0};
   this.children = [];
@@ -62,17 +63,43 @@ Node.prototype.gameOver = function(rand) {
   }
 };
 
-Node.prototype.symmCheck = function(nodeBoard) {
-  return this.children.every(c=>!symms.some(symm=>symm.every((s,i)=>c.board[i+1]===nodeBoard[s])));
-};
-
 Node.prototype.makeTree = function() {
   if (!this.gameOver(true)) {
-    for (var i = 1 ; i < 10 ; i++) {
-      if (!this.board[i]) {
+    for (var s = 1 ; s < 10 ; s++) {
+      if (!this.board[s]) {
         var testBoard = Object.assign({},this.board);
-        testBoard[i] = this.letter === 'X' ? 'O' : 'X';
-        this.symmCheck(testBoard,i) && this.children.push(new Node(this,testBoard,i));
+        testBoard[s] = this.letter === 'X' ? 'O' : 'X';
+        var childMoves = [0];
+        var childSymms = {}
+        childSymms[0] = [s];
+        var child = false;
+        symms.slice(1).forEach(function(symm,i) {
+          if (!child) {
+            for (var l = 0 ; l < this.children.length && !child ; l++) {
+              if (symm.every((s,k)=>this.children[l].board[k+1]===testBoard[s])) {
+                child = this.children[l];
+              }
+            }
+          }
+          if (symm.every((s,k)=>testBoard[s]===testBoard[k+1])) {
+            childMoves.push(i+1);
+            childSymms[i+1] = [s];
+          }
+        }.bind(this))
+        if (child) {
+          child.moves[s] = childMoves;
+          for (var key in childSymms) {
+            if (!child.symms[key]) {
+              child.symms[key] = [];
+            }
+            child.symms[key] = child.symms[key].concat(childSymms[key]);
+          }
+        }
+        else {
+          var moves = {};
+          moves[s] = childMoves;
+          this.children.push(new Node(this,testBoard,moves,childSymms));
+        }
       }
     }
     this.children.forEach(c=>c.makeTree());
@@ -103,6 +130,7 @@ Node.prototype.play = function() {
 
 var tree = new Node();
 tree.makeTree();
+tree
 
 function Game() {
   this.moves = [];
@@ -121,5 +149,5 @@ var data = {
 module.exports = {
   tree: tree,
   data: data,
-  symms: symms
+  symms : symms
 };

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { tree,symms } from './data';
+import { tree } from './data';
 import Board from './Board';
 import Display from './Display';
 
@@ -85,7 +85,7 @@ class Play extends Component {
       <div className="Play">
       	<div><button onClick={this.props.click} >watch comp train</button><button onClick={()=>this.changePlayer()} >{this.state.first ? 'let the comp go first' : 'you go first'}</button><button onClick={()=>this.playAgain()}>play again</button></div>
         <Display stats={this.state.node.stats} letter={this.state.node.letter} />
-      	<Board node={this.state.node} symm={this.state.symm} symms={symms} click={(p)=>this.squareClick(p)} comp={!this.state.player} />
+      	<Board node={this.state.node} symm={this.state.symm} click={(p)=>this.squareClick(p)} comp={!this.state.player} />
         <div>currSymm = {this.state.symm}</div>
       </div>
     );
