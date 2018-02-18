@@ -4,22 +4,54 @@ var games = [];
 var random = [];
 var leafID = 1;
 
-function Node(p,b,m,s) {
+function Node(p,b,pos) {
   this.parent = p || null;
   this.letter = !p || p.letter === 'X' ? 'O' : 'X';
-  this.moves = m || null;
-  this.symms = s || null;
-  this.board = b || {};
+  this.pos = {};
+  this.boards = {0: b || {}};
+  this.identities = {};
   this.stats = {wins:0,losses:0,ties:0,total:0};
   this.children = [];
+  if (pos) {
+    this.pos[p] = 0;
+    for (var i = 1 ; i < 8 ; i++) {
+      var r = this.pos[symms[i].indexOf(pos)+1];
+      !r && r = [];
+      r.push(i);
+      this.boards[i] = {};
+      for (var key in b) {
+        this.boards[i][symms[i][key-1]] = b[key];
+      }
+    }
+    for (var key in this.pos) {
+      if (this.pos[key].length > 1) {
+        this.pos[key].forEach(function(symm) {
+          this.identities[symm] = key;
+        });
+      }
+    }
+  }
 }
+
+Node.prototype.makeTree = function() {
+  if (!this.gameOver(true)) {
+    for (var s = 1 ; s < 10 ; s++) {
+      if (!this.boards[0][s]) {
+        var testBoard = Object.assign({},this.board);
+        testBoard[s] = this.letter === 'X' ? 'O' : 'X';
+        for (var c = 0 ; c < this.children.length ; c++) {
+          if (symms.slice(1).every(symm=>!symm.every((s,i)=>testBoard[s]===this.children[c].boards[0][i+1]))) {
+            this.children.push(new Node(this,testBoard,s))
+          }
+        }
+      }
+    }
+    this.children.forEach(c=>c.makeTree());
+  }
+};
 
 Node.prototype.update = function(win,rand) {
   var cb = win ? winner.bind(this) : tieer;
-  if (!this.leafID) {
-    this.leafID = leafID++;
-    this.res = win || 'TIE!';
-  }
   var node = this;
   while (node) {
     cb.call(this,node);
@@ -36,9 +68,14 @@ Node.prototype.update = function(win,rand) {
   }
   function tree(node) {
     if (node === this) {
+      this.leafID = leafID++;
+      this.res = win || 'TIE!';
       random.push(new Game());
       random[random.length-1].leafID = this.leafID;
       random[random.length-1].res = Array.isArray(this.res) ? this.letter : 'tie';
+      if (Array.isArray(this.res)) {
+        this.res = symms.map(symm=>win.map(w=>w.map(s=>symm[s-1])));
+      }
     }
     var newMove = Object.assign({},node,{stats:{},parent:undefined});
     for (var key in node.stats) {
@@ -52,65 +89,14 @@ Node.prototype.update = function(win,rand) {
 };
 
 Node.prototype.gameOver = function(rand) {
-  var i = wins.filter(w=>w.every(s=>this.board[s]===this.letter));
+  var i = wins.filter(w=>w.every(s=>this.boards[0][s]===this.letter));
   if (i.length) {
     this.update(i,rand);
     return true;
   }
-  if (Object.keys(this.board).length === 9) {
+  if (Object.keys(this.boards[0]).length === 9) {
     this.update(null,rand);
     return true;
-  }
-};
-
-Node.prototype.makeTree = function() {
-  if (!this.gameOver(true)) {
-    for (var s = 1 ; s < 10 ; s++) {
-      if (!this.board[s]) {
-        var testBoard = Object.assign({},this.board);
-        testBoard[s] = this.letter === 'X' ? 'O' : 'X';
-        var childMoves = [0];
-        var childSymms = {}
-        childSymms[0] = [s];
-        var child = false;
-        symms.slice(1).forEach(makeSymms.bind(this));
-        if (child) {
-          child.moves[s] = childMoves;
-          for (var key in childSymms) {
-            if (!child.symms[key]) {
-              child.symms[key] = [];
-            }
-            child.symms[key] = child.symms[key].concat(childSymms[key]);
-          }
-        }
-        else {
-          var moves = {};
-          moves[s] = childMoves;
-          this.children.push(new Node(this,testBoard,moves,childSymms));
-        }
-      }
-    }
-    this.children.forEach(c=>c.makeTree());
-
-    function makeSymms(symm,i) {
-      if (!child) {
-        for (var l = 0 ; l < this.children.length && !child ; l++) {
-          if (symm.every(findChild.bind(this))) {
-            child = this.children[l];
-          }
-        }
-      }
-      if (symm.every(findBoards)) {
-        childMoves.push(i+1);
-        childSymms[i+1] = [s];
-      }
-      function findChild(s,k) {
-        return this.children[l].board[k+1]===testBoard[s];
-      }
-      function findBoards(s,k) {
-       return testBoard[s]===testBoard[k+1];
-      }
-    }
   }
 };
 
@@ -136,14 +122,12 @@ Node.prototype.play = function() {
   }
 };
 
-var tree = new Node();
-tree.makeTree();
-
-console.log(tree)
-
 function Game() {
   this.moves = [];
 }
+
+var tree = new Node();
+tree.makeTree();
 
 for (var j = 0 ; j < 16889 ; j++) {
   games.push(new Game());
