@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { tree } from './data';
 import Board from './Board';
 import Display from './Display';
+import Symm from './Symm';
 
 class Play extends Component {
   constructor(props) {
@@ -10,25 +11,23 @@ class Play extends Component {
       node: tree,
       first: false,
       player: false,
-      symm: 1
+      symm: 0
     };
   }
 
   changePlayer() {
     var player = this.state.first;
-    this.setState({node:tree,first:!player,player:!player,symm:1});
+    this.setState({node:tree,first:!player,player:!player,symm:0});
   }
 
   playAgain() {
     var player = this.state.first;
-    this.setState({node:tree,symm:Math.ceil(Math.random()*8),player:player});
+    this.setState({node:tree,player:player});
   }
 
   squareClick(p) {
     console.log('CLICKED',p)
-    var node = this.state.node.children.filter(c=>c.moves[p])[0];
-    console.log('MOVE',node)
-
+    var node = this.state.node.children.filter(c=>c.boards[this.state.symm][p])[0];
     this.setState({node:node,player:false});
   }
 
@@ -43,11 +42,7 @@ class Play extends Component {
 
   compMove() {
     var node = this.state.node.children.reduce(pick);
-    var moves = Object.keys(node.moves);
-    var symms = node.moves[moves[Math.floor(Math.random()*moves.length)]];
-    var symm = symms[Math.floor(Math.random()*symms.length)];
-    console.log(node,moves,symm)
-    this.setState({node:node,player:true,symm:symm+1});
+    this.setState({node:node,player:true});
     function pick(a,b) {
       return stats(b) > stats(a) ? b : a;
       function stats(n) {
@@ -63,7 +58,7 @@ class Play extends Component {
       	<div><button onClick={this.props.click} >watch comp train</button><button onClick={()=>this.changePlayer()} >{this.state.first ? 'let the comp go first' : 'you go first'}</button><button onClick={()=>this.playAgain()}>play again</button></div>
         <Display stats={this.state.node.stats} letter={this.state.node.letter} />
       	<Board node={this.state.node} symm={this.state.symm} click={(p)=>this.squareClick(p)} comp={!this.state.player} />
-        <div>currSymm = {this.state.symm}</div>
+        <Symm click={()=>this.changeSymm()} symm={this.state.symm} />
       </div>
     );
   }
