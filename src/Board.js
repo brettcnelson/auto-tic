@@ -40,7 +40,8 @@ function Board(props) {
 
 	function makeSquare(s,i) {
 		var val = board[s];
-		return !val ? props.node.children.some(c=>c.boards[props.symm][s]) ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} color={'black'} click={()=>squareClick(s)} /> : <Square key={i} val={val} />;
+		return !val ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} val={val} />;
+		// props.node.children.some(c=>c.boards[props.symm][s]) ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} color={'black'} click={()=>squareClick(s)} />
 	}
 
 	function trainingBoard() {

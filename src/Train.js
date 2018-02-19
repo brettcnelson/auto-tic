@@ -71,11 +71,11 @@ class Train extends Component {
     return (
       <div className="Train">
       	<div><button onClick={()=>this.props.click()} >play against the computer</button></div>
-        <div><button onClick={()=>this.toggleGames()} >{this.state.games ? 'build tree' : 'training games'}</button><button onClick={()=>this.togglePause()}>{this.state.paused ? 'resume' : 'pause'}</button><button onClick={()=>this.changeSpeed()}>change speed</button></div>
         <div>Game {this.state.game+1} of {games.length} - LeafID: {currGame.leafID} - Res: {currGame.res} - Moves: {currGame.moves.length-1}</div>
       	<Display stats={node.stats} letter={node.letter} />
-        <Board node={node} symm={this.state.symm} />
+        <div><button onClick={()=>this.toggleGames()} >{this.state.games ? 'build tree' : 'training games'}</button><button onClick={()=>this.togglePause()}>{this.state.paused ? 'resume' : 'pause'}</button><button onClick={()=>this.changeSpeed()}>change speed</button></div>
         <Symm click={(e)=>this.changeSymm(e)} random={this.state.randSymm} symm={this.state.symm} />
+        <Board node={node} symm={this.state.symm} />
       </div>
     );
   }

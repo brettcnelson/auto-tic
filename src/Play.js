@@ -11,8 +11,20 @@ class Play extends Component {
       node: tree,
       first: false,
       player: false,
+      randSymm: false,
       symm: 0
     };
+  }
+
+  changeSymm(e) {
+    var val = Number(e.target.value);
+    val === -1 ? 
+      this.setState({paused:true,symm:this.randomSymm(),randSymm:true}) : 
+      this.setState({paused:true,symm:val,randSymm:false});
+  }
+
+  randomSymm() {
+    return Math.floor(Math.random()*8);
   }
 
   changePlayer() {
@@ -52,13 +64,14 @@ class Play extends Component {
   }
 
   render() {
-  	!this.state.player && this.state.node.children.length && setTimeout(()=>this.compMove(),1000);
+  	!this.state.player && !this.state.node.res && setTimeout(()=>this.compMove(),1000);
     return (
       <div className="Play">
-      	<div><button onClick={this.props.click} >watch comp train</button><button onClick={()=>this.changePlayer()} >{this.state.first ? 'let the comp go first' : 'you go first'}</button><button onClick={()=>this.playAgain()}>play again</button></div>
+      	<div><button onClick={this.props.click} >watch comp train</button></div>
         <Display stats={this.state.node.stats} letter={this.state.node.letter} />
-      	<Board node={this.state.node} symm={this.state.symm} click={(p)=>this.squareClick(p)} comp={!this.state.player} />
-        <Symm click={()=>this.changeSymm()} symm={this.state.symm} />
+        <div><button onClick={()=>this.changePlayer()} >{this.state.first ? 'let the comp go first' : 'you go first'}</button><button onClick={()=>this.playAgain()}>play again</button></div>
+        <Symm click={(e)=>this.changeSymm(e)} random={this.state.randSymm} symm={this.state.symm} />
+        <Board node={this.state.node} symm={this.state.symm} click={(p)=>this.squareClick(p)} comp={!this.state.player} />
       </div>
     );
   }
