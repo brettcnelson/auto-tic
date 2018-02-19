@@ -35,7 +35,8 @@ class Play extends Component {
 
   playAgain() {
     var player = this.state.first;
-    this.setState({node:tree,player:player});
+    var symm = this.state.randSymm ? this.randomSymm() : this.state.symm;
+    this.setState({node:tree,player:player,symm:symm});
   }
 
   squareClick(p) {
