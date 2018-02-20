@@ -17,7 +17,7 @@ function Board(props) {
 
 	function renderBoard(cb) {
 		var squares = [[1,2,3],[4,5,6],[7,8,9]];
-		return squares.map((r,i)=><div key={i} >{r.map(cb)}</div>)
+		return squares.map((r,i)=><div className="row" key={i} >{r.map(cb)}</div>)
 	}
 
 	function makeWinBoard(s,i) {
@@ -33,14 +33,11 @@ function Board(props) {
 
 	function makeCompBoard(s,i) {
 		return <Square key={i} val={board[s]} />;
-		// var val = board[s];
-		// return !val ? props.node.children.some(c=>c.boards[props.symm][s]) ? <Square key={i} /> : <Square key={i} color={'black'} /> : <Square key={i} val={val} />;
 	}
 
 	function makeSquare(s,i) {
 		var val = board[s];
 		return !val ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} val={val} />;
-		// return !val ? props.node.children.some(c=>c.boards[props.symm][s]) ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} color={'black'} /> : <Square key={i} val={val} />;
 	}
 
 	function makeTrainBoard(s,i) {

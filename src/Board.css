@@ -1,5 +1,11 @@
 .Board {
 	padding:1% 0 5%;
-	width:30.5vw;
+	text-align: center;
+	width:35vw;
+	display:inline-block;
+	font-size:0;
+}
+
+.row {
 	display:inline-block;
 }
