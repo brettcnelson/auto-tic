@@ -10,9 +10,14 @@ function Board(props) {
 			return Array.isArray(props.node.res) ? renderBoard(makeWinBoard) : renderBoard(makeTieBoard);
 		}
 		if (props.click) {
-			return props.comp ? computerBoard() : playingBoard();
+			return props.comp ? renderBoard(makeCompBoard) : renderBoard(makeSquare);
 		}
-		return trainingBoard();
+		return renderBoard(makeTrainBoard);
+	}
+
+	function renderBoard(cb) {
+		var squares = [[1,2,3],[4,5,6],[7,8,9]];
+		return squares.map((r,i)=><div key={i} >{r.map(cb)}</div>)
 	}
 
 	function makeWinBoard(s,i) {
@@ -26,39 +31,22 @@ function Board(props) {
 		return <Square key={i} val={board[s]} color={'yellow'} />;
 	}
 
-	function computerBoard() {
-		return renderBoard(makeCompBoard);
-	}
-
 	function makeCompBoard(s,i) {
-		// return <Square key={i} val={board[s]} />;
-		var val = board[s];
-		return !val ? props.node.children.some(c=>c.boards[props.symm][s]) ? <Square key={i} /> : <Square key={i} color={'black'} /> : <Square key={i} val={val} />;
-	}
-
-	function playingBoard() {
-		return renderBoard(makeSquare);
+		return <Square key={i} val={board[s]} />;
+		// var val = board[s];
+		// return !val ? props.node.children.some(c=>c.boards[props.symm][s]) ? <Square key={i} /> : <Square key={i} color={'black'} /> : <Square key={i} val={val} />;
 	}
 
 	function makeSquare(s,i) {
 		var val = board[s];
-		// return !val ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} val={val} />;
-		return !val ? props.node.children.some(c=>c.boards[props.symm][s]) ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} color={'black'} /> : <Square key={i} val={val} />;
-	}
-
-	function trainingBoard() {
-		return renderBoard(makeTrainBoard);
+		return !val ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} val={val} />;
+		// return !val ? props.node.children.some(c=>c.boards[props.symm][s]) ? <Square key={i} click={()=>squareClick(s)} /> : <Square key={i} color={'black'} /> : <Square key={i} val={val} />;
 	}
 
 	function makeTrainBoard(s,i) {
-		return board[s] || props.node.children.some(c=>c.boards[props.symm][s]) ?
+		return props.node.children.some(c=>c.boards[props.symm][s]) ?
 			<Square key={i} val={board[s]} /> :
 			<Square key={i} color={'black'} />;
-	}
-
-	function renderBoard(cb) {
-		var squares = [[1,2,3],[4,5,6],[7,8,9]];
-		return squares.map((r,i)=><div key={i} >{r.map(cb)}</div>)
 	}
 
 	function squareClick(p) {

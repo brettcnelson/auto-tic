@@ -4,19 +4,20 @@ var games = [];
 var random = [];
 var leafID = 1;
 
-function Node(p,b) {
+function Node(p,b,s) {
   this.parent = p || null;
   this.letter = !p || p.letter === 'X' ? 'O' : 'X';
-  this.boards = {};
   this.stats = {wins:0,losses:0,ties:0,total:0};
   this.children = [];
-  this.boards[0] = b || {};
+  this.pos = s;
+  this.boards = [];
+  this.boards[0] = b || {}; 
   for (var i = 1 ; i < 8 ; i++) {
     this.boards[i] = {};
     for (var key in b) {
-      this.boards[i][symms[i][key-1]] = b[key];
+      this.boards[i][symms[i].indexOf(Number(key))+1] = b[key];
     }
-  }
+  } 
 }
 
 Node.prototype.makeTree = function() {
@@ -61,7 +62,7 @@ Node.prototype.update = function(win,rand) {
       random[random.length-1].leafID = this.leafID;
       random[random.length-1].res = Array.isArray(this.res) ? this.letter : 'tie';
       if (Array.isArray(this.res)) {
-        this.res = symms.map(symm=>win.map(w=>w.map(s=>symm[s-1])));
+        this.res = symms.map(symm=>win.map(w=>w.map(s=>symm.indexOf(s)+1)));
       }
     }
     var newMove = Object.assign({},node,{stats:{},parent:undefined});
@@ -115,6 +116,7 @@ function Game() {
 
 var tree = new Node();
 tree.makeTree();
+console.log(tree)
 
 for (var j = 0 ; j < 16889 ; j++) {
   games.push(new Game());
@@ -129,5 +131,5 @@ var data = {
 module.exports = {
   tree: tree,
   data: data,
-  symms : symms
+  symmetries : symms
 };
