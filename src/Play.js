@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Play.css';
-import { tree } from './data';
+import { tree,updateTree } from './data';
 import Board from './Board';
 import Display from './Display';
 import Symm from './Symm';
@@ -95,7 +95,8 @@ class Play extends Component {
     }
 
   render() {
-  	!this.state.player && !this.state.node.res && setTimeout(()=>this.compMove(),1000);
+    if (this.state.node.res) {updateTree(this.state.node)}
+  	else {!this.state.player && setTimeout(()=>this.compMove(),1000)}
     return (
       <div className="Play">
       	<div className="buttons"><button onClick={this.props.click} >watch comp train</button></div>

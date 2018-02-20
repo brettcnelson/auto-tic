@@ -15,7 +15,7 @@ class Train extends Component {
       move:0,
       symm:0,
       randSymm:false,
-      delay: 1000
+      delay: 500
     };
   }
 

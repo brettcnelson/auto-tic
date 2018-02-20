@@ -4,12 +4,11 @@ var games = [];
 var random = [];
 var leafID = 1;
 
-function Node(p,b,s) {
+function Node(p,b) {
   this.parent = p || null;
   this.letter = !p || p.letter === 'X' ? 'O' : 'X';
   this.stats = {wins:0,losses:0,ties:0,total:0};
   this.children = [];
-  this.pos = s;
   this.boards = [];
   this.boards[0] = b || {}; 
   for (var i = 1 ; i < 8 ; i++) {
@@ -27,7 +26,7 @@ Node.prototype.makeTree = function() {
         var testBoard = Object.assign({},this.boards[0]);
         testBoard[s] = this.letter === 'X' ? 'O' : 'X';
         if (!this.children.some(childSymm)) {
-          this.children.push(new Node(this,testBoard,s));
+          this.children.push(new Node(this,testBoard));
         }
       }
     }
@@ -76,14 +75,14 @@ Node.prototype.update = function(win,rand) {
   }
 };
 
-Node.prototype.gameOver = function(rand) {
+Node.prototype.gameOver = function() {
   var i = wins.filter(w=>w.every(s=>this.boards[0][s]===this.letter));
   if (i.length) {
-    this.update(i,rand);
+    this.update(i,true);
     return true;
   }
   if (Object.keys(this.boards[0]).length === 9) {
-    this.update(null,rand);
+    this.update(null,true);
     return true;
   }
 };
@@ -94,11 +93,12 @@ Node.prototype.play = function() {
     newMove.stats[key] = this.stats[key];
   }
   games[games.length-1].moves.push(newMove);
-  if (!this.gameOver()) {
+  if (!this.res) {
     var nextMove = this.children.reduce(pick);
     nextMove.play();
   }
   else {
+    this.update(Array.isArray(this.res) && this.res);
     games[games.length-1].leafID = this.leafID;
     games[games.length-1].res = Array.isArray(this.res) ? this.letter : 'TIE';
   }
@@ -116,11 +116,14 @@ function Game() {
 
 var tree = new Node();
 tree.makeTree();
-console.log(tree)
 
 for (var j = 0 ; j < 16889 ; j++) {
   games.push(new Game());
   tree.play();
+}
+
+function updateTree(node) {
+  node.update(Array.isArray(node.res) && node.res);
 }
 
 var data = {
@@ -131,5 +134,5 @@ var data = {
 module.exports = {
   tree: tree,
   data: data,
-  symmetries : symms
+  updateTree: updateTree
 };
